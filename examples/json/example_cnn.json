@@ -1,0 +1,19 @@
+{
+	"inshape":[784],
+	"nets":[{"id":0,"outshape":[28,28,1]},
+			{"id":1,"varshape":[5,5,1,32],"var":"W1"},
+			{"id":2,"varshape":[32],"var":"b1"},
+			{"id":3},
+			{"id":4},
+			{"id":1,"varshape":[5,5,32,64],"var":"W2"},
+			{"id":2,"varshape":[64],"var":"b2"},
+			{"id":3},
+			{"id":4},
+			{"id":0,"outshape":[3136]},
+			{"id":5,"varshape":[3136,1024],"var":"W_fc1"},
+			{"id":2,"varshape":[1024],"var":"b_fc1"},
+			{"id":3},
+			{"id":5,"varshape":[1024,10],"var":"W_fc2"},
+			{"id":2,"varshape":[10],"var":"b_fc2"},
+			{"id":6,}]
+}
