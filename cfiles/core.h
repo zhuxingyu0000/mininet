@@ -15,7 +15,6 @@ void AddVector(tensor* t,tensor* v);
 void ReLu(tensor* in,tensor* out);
 void maxpool2x2(tensor* in,tensor* out);
 void MatMul(tensor* t1,tensor* t2,tensor* output);
-
-void tensor_print(tensor* t);
+void softmax(tensor* input,tensor* output);
 
 #endif

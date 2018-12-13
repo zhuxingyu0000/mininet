@@ -140,15 +140,15 @@ void ReLu(tensor* in,tensor* out)
 	}
 	for(i=0;i<mul;i++)
 	{
-		out[i]=in[i];
-		if(in[i]<0.0) out[i]=0.0;
+		out->data[i]=in->data[i];
+		if(in->data[i]<0.0) out->data[i]=0.0;
 	}
 }
 
 inline float max_4(float x1,float x2,float x3,float x4)
 {
-	y1=(x1>x2)?x1:x2;
-	y2=(x3>x4)?x3:x4;
+	float y1=(x1>x2)?x1:x2;
+	float y2=(x3>x4)?x3:x4;
 	return (y1>y2)?y1:y2;
 }
 
@@ -265,12 +265,4 @@ void softmax(tensor* input,tensor* output)
 			output->data[i*batch_size+j]=output->data[i*batch_size+j]/sum;
 		}
 	}
-}
-
-#include <stdio.h>
-//打印张量t
-void tensor_print(tensor* t)
-{
-	for(int i=0;i<t->dims[0]*t->dims[1]*t->dims[2]*t->dims[3];i++)
-		printf("%f ",t->data[i]);
 }
