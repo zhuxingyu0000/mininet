@@ -1,6 +1,7 @@
 #include "core.h"
 #include <assert.h>
 #include <stdio.h>
+#include <math.h>
 
 //取4维张量某行某列某维度上的值
 
@@ -201,7 +202,6 @@ inline void Tensor2_Write(tensor* t,float n,int x2,int x1)
 
 
 // 矩阵乘积
-
 void MatMul(tensor* t1,tensor* t2,tensor* output)
 {
 	int i,j;
@@ -235,6 +235,34 @@ void MatMul(tensor* t1,tensor* t2,tensor* output)
 				sum+=Tensor2(t1,i,k)*Tensor2(t2,k,j);
 			}
 			Tensor2_Write(output,sum,i,j);
+		}
+	}
+}
+
+//softmax函数
+void softmax(tensor* input,tensor* output)
+{
+	int i,j;
+	int batch_size=input->dims[0];
+	int mul=1;
+	output->max_dim=input->max_dim;
+	for(i=0;i<output->max_dim;i++)
+	{
+		output->dims[i]=input->dims[i];
+		mul*=input->dims[i];
+	}
+	mul/=input->dims[0];
+	for(i=0;i<mul;i++)
+	{
+		float sum=0.0;
+		for(j=0;j<batch_size;j++)
+		{
+			output->data[i*batch_size+j]=(float)exp((double)(input->data[i*batch_size+j]));
+			sum+=output->data[i*batch_size+j];
+		}
+		for(j=0;j<batch_size;j++)
+		{
+			output->data[i*batch_size+j]=output->data[i*batch_size+j]/sum;
 		}
 	}
 }
