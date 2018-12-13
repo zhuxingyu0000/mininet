@@ -1,7 +1,10 @@
 #include "core.h"
 #include <assert.h>
-#include <stdio.h>
 #include <math.h>
+
+#include <iostream>
+
+using namespace std;
 
 //取4维张量某行某列某维度上的值
 
@@ -100,7 +103,7 @@ void Reshape(tensor* t,int out_shape[],int dim)
 		if(out_shape[i]<0)
 			m=i;
 	}
-	for(i=0;i<t->max_dim;t++)
+	for(i=0;i<t->max_dim;i++)
 		mulmy*=t->dims[i];
 	if(mul>0) assert(mulmy==mul);
 	else t->dims[m]=-mulmy/mul;

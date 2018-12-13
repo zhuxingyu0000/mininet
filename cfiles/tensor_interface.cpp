@@ -19,10 +19,13 @@ void tensor_print_recursive(tensor* t,int m)
 	}
 	else
 	{
+		int k=1;
+		for(int i=0;i<t->max_dim-1;i++) k*=t->dims[i];
 		for(int i=0;i<t->dims[t->max_dim-1];i++)
 		{
 			tensor newtensor=*t;
 			newtensor.max_dim=newtensor.max_dim-1;
+			newtensor.data+=(i*k);
 			tensor_print_recursive(&newtensor,m);
 			cout<<endl;
 			for(int j=0;j<m-t->max_dim+1;j++) cout<<' ';
