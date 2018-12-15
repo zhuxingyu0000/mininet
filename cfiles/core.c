@@ -164,11 +164,11 @@ void maxpool2x2(tensor* in,tensor* out)
 	//dims[0] 输入图像深度
 	//dims[1] dims[2] 输入图像x，y
 	//dims[3] batch数量
-	out->dims[0]=in->dims[0];
-	out->dims[1]=in->dims[1]/2;
-	out->dims[2]=in->dims[2]/2;
-	out->dims[3]=in->dims[3];
-	out->max_dim=4;
+	//out->dims[0]=in->dims[0];
+	//out->dims[1]=in->dims[1]/2;
+	//out->dims[2]=in->dims[2]/2;
+	//out->dims[3]=in->dims[3];
+	//out->max_dim=4;
 	for(b=0;b<in->dims[3];b++)
 	{
 		for(d=0;d<in->dims[0];d++)
@@ -187,6 +187,12 @@ void maxpool2x2(tensor* in,tensor* out)
 			}
 		}
 	}
+
+	out->dims[0]=in->dims[0];
+	out->dims[1]=in->dims[1]/2;
+	out->dims[2]=in->dims[2]/2;
+	out->dims[3]=in->dims[3];
+	out->max_dim=4;
 }
 
 inline float Tensor2(tensor* t,int x2,int x1)
