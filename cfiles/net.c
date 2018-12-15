@@ -99,6 +99,5 @@ void net_run(tensor* in,tensor* out)
 	AddVector(&t4,&b_fc2);
 
 	softmax(&t4,out);
-
 	free(t4.data);
 }
