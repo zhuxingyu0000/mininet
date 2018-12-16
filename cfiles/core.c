@@ -81,7 +81,7 @@ void Conv2D(tensor* input_tensor,tensor* output_tensor,tensor* core)
 						{
 							for(j=0;j<input_depth;j++)
 							{
-								sum+=Tensor4(input_tensor,i,y+n,x+m,j) *Tensor4(core,mid_y-n,mid_x-m,j,d);
+								sum+=Tensor4(input_tensor,i,y+n,x+m,j) *Tensor4(core,mid_y+n,mid_x+m,j,d);
 							}
 						}
 					}
@@ -127,7 +127,7 @@ void AddVector(tensor* t,tensor* v)
 	for(i=0;i<mul;i++)
 	{
 		for(j=0;j<v->dims[0];j++)
-			t->data[i*t->dims[0]+j]=v->data[j];
+			t->data[i*t->dims[0]+j]+=v->data[j];
 	}
 }
 
