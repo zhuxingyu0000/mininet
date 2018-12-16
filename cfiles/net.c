@@ -43,7 +43,6 @@ void run_net(tensor* in,tensor* out)
 	W1.data=W1_w;
 	t1.data=(float*)malloc(sizeof(float)*(32*in->dims[1]*in->dims[2]*in->dims[3]));
 	Conv2D(in,&t1,&W1);
-	//tensor_print(&t1);
 
 	b1.dims[0]=32;
 	b1.max_dim=1;
@@ -51,7 +50,6 @@ void run_net(tensor* in,tensor* out)
 	AddVector(&t1,&b1);
 	
 	ReLu(&t1,&t1);
-	//tensor_print(&t1);
 
 	maxpool2x2(&t1,&t1);
 	tensor_print(&t1);
@@ -65,25 +63,19 @@ void run_net(tensor* in,tensor* out)
 	t2.data=(float*)malloc(sizeof(float)*(64*t1.dims[1]*t1.dims[2]*t1.dims[3]));
 	Conv2D(&t1,&t2,&W2);
 	free(t1.data);
-	//tensor_print(&t2);
 
 	b2.dims[0]=64;
 	b2.max_dim=1;
 	b2.data=b2_w;
 	AddVector(&t2,&b2);
-	//tensor_print(&t2);
 
 	ReLu(&t2,&t2);
-	//tensor_print(&t2);
 
 	maxpool2x2(&t2,&t2);
-	//tensor_print(&t2);
 	
 	temp_shape[0]=3136;
 	temp_shape[1]=-1;
 	Reshape(&t2,temp_shape,2);
-
-	//tensor_print(&t2);
 
 	W_fc1.dims[0]=1024;
 	W_fc1.dims[1]=3136;

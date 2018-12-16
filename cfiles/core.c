@@ -159,7 +159,7 @@ inline float max_4(float x1,float x2,float x3,float x4)
 void maxpool2x2(tensor* in,tensor* out)
 {
 	int i,j,b,d;
-
+	int p=0;
 	//in
 	//dims[0] 输入图像深度
 	//dims[1] dims[2] 输入图像x，y
@@ -171,18 +171,18 @@ void maxpool2x2(tensor* in,tensor* out)
 	//out->max_dim=4;
 	for(b=0;b<in->dims[3];b++)
 	{
-		for(d=0;d<in->dims[0];d++)
+		for(i=0;i<in->dims[2];i+=2)
 		{
-			for(i=0;i<in->dims[1];i+=2)
+			for(j=0;j<in->dims[1];j+=2)
 			{
-				for(j=0;j<in->dims[2];j+=2)
+				for(d=0;d<in->dims[0];d++)
 				{
-					float t1=Tensor4(in,b,j,i,d);
-					float t2=Tensor4(in,b,j+1,i,d);
-					float t3=Tensor4(in,b,j,i+1,d);
-					float t4=Tensor4(in,b,j+1,i+1,d);
+					float t1=Tensor4(in,b,i,j,d);
+					float t2=Tensor4(in,b,i+1,j,d);
+					float t3=Tensor4(in,b,i,j+1,d);
+					float t4=Tensor4(in,b,i+1,j+1,d);
 					float max=max_4(t1,t2,t3,t4);
-					Tensor4_Write(out,max,b,j/2,i/2,d);
+					out->data[p++]=max;
 				}
 			}
 		}

@@ -7,7 +7,7 @@
 using namespace std;
 
 int main()
-{/**
+{
 	tensor v;
 	v.data=(float*)malloc(sizeof(float)*28*28);
 	v.max_dim=2;
@@ -26,18 +26,5 @@ int main()
 	tensor_print(&o);
 	free(v.data);
 	free(o.data);
-	***/
-	tensor v;
-	float f[100];
-	for(int i=1;i<=100;i++) f[i-1]=i;
-	v.data=f;
-	v.max_dim=4;
-	v.dims[0]=1;
-	v.dims[1]=10;
-	v.dims[2]=10;
-	v.dims[3]=1;
-	maxpool2x2(&v,&v);
-	tensor_print(&v);
-	
 	return 0;
 }
