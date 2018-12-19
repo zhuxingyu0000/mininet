@@ -131,23 +131,6 @@ void AddVector(tensor* t,tensor* v)
 	}
 }
 
-//ReLu激活函数
-void ReLu(tensor* in,tensor* out)
-{
-	int i,mul=1;
-	out->max_dim=in->max_dim;
-	for(i=0;i<in->max_dim;i++)
-	{
-		out->dims[i]=in->dims[i];
-		mul*=in->dims[i];
-	}
-	for(i=0;i<mul;i++)
-	{
-		out->data[i]=in->data[i];
-		if(in->data[i]<0.0) out->data[i]=0.0;
-	}
-}
-
 inline float max_4(float x1,float x2,float x3,float x4)
 {
 	float y1=(x1>x2)?x1:x2;
@@ -244,34 +227,6 @@ void MatMul(tensor* t1,tensor* t2,tensor* output)
 				sum+=Tensor2(t1,i,k)*Tensor2(t2,k,j);
 			}
 			Tensor2_Write(output,sum,i,j);
-		}
-	}
-}
-
-//softmax函数
-void softmax(tensor* input,tensor* output)
-{
-	int i,j;
-	int batch_size=input->dims[0];
-	int mul=1;
-	output->max_dim=input->max_dim;
-	for(i=0;i<output->max_dim;i++)
-	{
-		output->dims[i]=input->dims[i];
-		mul*=input->dims[i];
-	}
-	mul/=input->dims[0];
-	for(i=0;i<mul;i++)
-	{
-		float sum=0.0;
-		for(j=0;j<batch_size;j++)
-		{
-			output->data[i*batch_size+j]=(float)exp((double)(input->data[i*batch_size+j]));
-			sum+=output->data[i*batch_size+j];
-		}
-		for(j=0;j<batch_size;j++)
-		{
-			output->data[i*batch_size+j]=output->data[i*batch_size+j]/sum;
 		}
 	}
 }

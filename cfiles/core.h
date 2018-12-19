@@ -1,7 +1,8 @@
 #ifndef _CORE_H_
 #define _CORE_H_
 
-#define MAX_DIMENSION 10
+//最高维度个数，可更改
+#define MAX_DIMENSION 5
 
 typedef struct{
 	float* data;
@@ -16,5 +17,7 @@ void ReLu(tensor* in,tensor* out);
 void maxpool2x2(tensor* in,tensor* out);
 void MatMul(tensor* t1,tensor* t2,tensor* output);
 void softmax(tensor* input,tensor* output);
+void tensortanh(tensor* in,tensor* out);
+void sigmoid(tensor* in,tensor* out);
 
 #endif
