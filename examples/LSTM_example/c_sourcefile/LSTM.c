@@ -99,7 +99,7 @@ void LSTM_cell_destroy(LSTM_cell cell)
 }
 
 //执行LSTM单元，input为输入一维数组
-void LSTM_call(LSTM_cell cell,float* input)
+void LSTM_call(LSTM_cell cell,float* input,float forget_bias)
 {
     int i;
 
@@ -111,7 +111,7 @@ void LSTM_call(LSTM_cell cell,float* input)
     //f(t)=sigma(Wf*input+bf)
     MatMul(&(cell->input),&(cell->W_F),&(cell->ft));
     AddVector(&(cell->ft),&(cell->U_F),&(cell->ft));
-    for(i=0;i<cell->units;i++) cell->ft.data[i]+=1.0;
+    for(i=0;i<cell->units;i++) cell->ft.data[i]+=forget_bias;
     sigmoid(&(cell->ft),&(cell->ft));
 
     //输入门
@@ -141,7 +141,7 @@ void LSTM_call(LSTM_cell cell,float* input)
     for(i=0;i<cell->units;i++) cell->L.data[i]=cell->ot.data[i]*cell->L.data[i];
 }
 
-void LSTM_static(LSTM_cell* cell,int cells,tensor* input,tensor* output)
+void LSTM_static(LSTM_cell* cell,int cells,int forget_bias,tensor* input,tensor* output)
 {
     int i,j,batchs,time_steps;
 
@@ -175,7 +175,7 @@ void LSTM_static(LSTM_cell* cell,int cells,tensor* input,tensor* output)
             float* data=input->data+input->dims[0]*j+input->dims[0]*input->dims[1]*i;
             for(k=0;k<cells;k++)
             {
-                LSTM_call(cell[k],data);
+                LSTM_call(cell[k],data,forget_bias);
             }
         }
         for(k=0;k<output->dims[0];k++)

@@ -45,7 +45,7 @@ if DEFAULT_FRAMEWORK=="tensorflow":
             for j in i:
                 print(j+" "+str(np.array(sess.run(tf.get_collection(j))).shape))
                 arr=np.array(sess.run(tf.get_collection(j)))
-                print(j+"  "+str(arr))
+                #print(j+"  "+str(arr))
                 I=[]
                 C=[]
                 F=[]

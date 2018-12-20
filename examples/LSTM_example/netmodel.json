@@ -1,5 +1,8 @@
 {
-	"inshape":[-1,10],
-    "nets":[{"id":"reshape","outshape":[-1,10]},
-            {"id":"LSTM","outshape":[-1,2],"var":["W1","U1"]}]
+	"inshape":[-1,784],
+    "nets":[{"id":"reshape","outshape":[-1,28,28]},
+            {"id":"LSTM","outshape":[-1,100],"var":["W1","U1"]},
+            {"id":"matmul","varshape":[100,10],"var":"W_conv1"},
+            {"id":"add","varshape":[10],"var":"b_conv1"},
+            {"id":"softmax"}]
 }

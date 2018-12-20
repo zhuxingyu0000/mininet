@@ -17,6 +17,5 @@ with open(INPUT_ARRAY_DIR+INPUT_ARRAY_NAME,'r',encoding='utf-8') as f:
 with tf.Session() as sess:
 	saver = tf.train.import_meta_graph(MODEL_DIR+MODEL_META_NAME)
 	saver.restore(sess,tf.train.latest_checkpoint(MODEL_DIR))
-	#inputlist=np.array(inputlist).reshape(1,784)
-	inputlist=np.array(inputlist).reshape(1,10)
-	print(sess.run(tf.get_collection('out'),feed_dict={'Placeholder:0':inputlist}))
+	inputlist=np.array(inputlist).reshape(1,784)
+	print(sess.run(tf.get_collection('out'),feed_dict={'Placeholder:0':inputlist,'Placeholder_2:0':1.0}))

@@ -56,7 +56,7 @@ void LSTM_multicellconnect(LSTM_cell* cell,int cells);
 //多层LSTM需要先合并
 //LSTM input shape (batchs,time_steps,inputshape)
 //LSTM output shape (batchs,outputshape)
-void LSTM_static(LSTM_cell* cell,int cells,tensor* input,tensor* output);
+void LSTM_static(LSTM_cell* cell,int cells,int forget_bias,tensor* input,tensor* output);
 
 //销毁LSTM单元，释放alloc的内存
 void LSTM_cell_destroy(LSTM_cell cell);
