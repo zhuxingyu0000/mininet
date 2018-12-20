@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include "tensor_interface.h"
 
 LSTM_cell LSTM_cell_create(int units,int inputshape)
 {
@@ -93,6 +94,7 @@ void LSTM_cell_destroy(LSTM_cell cell)
     free(cell->ct.data);
     free(cell->ot.data);
     free(cell->ft.data);
+    free(cell->input.data);
     free(cell);
 }
 
@@ -101,31 +103,32 @@ void LSTM_call(LSTM_cell cell,float* input)
 {
     int i;
 
-    //input=[L(t-1),x(t)]
-    for(i=0;i<cell->units;i++) cell->input.data[i]=cell->last->L.data[i];
-    for(i=0;i<cell->inputshape;i++) cell->input.data[i+cell->units]=input[i];
+    //input=[x(t),L(t-1)]
+    for(i=0;i<cell->inputshape;i++) cell->input.data[i]=input[i];
+    for(i=0;i<cell->units;i++) cell->input.data[i+cell->inputshape]=cell->last->L.data[i];
 
     //遗忘门
     //f(t)=sigma(Wf*input+bf)
     MatMul(&(cell->input),&(cell->W_F),&(cell->ft));
     AddVector(&(cell->ft),&(cell->U_F),&(cell->ft));
+    for(i=0;i<cell->units;i++) cell->ft.data[i]+=1.0;
     sigmoid(&(cell->ft),&(cell->ft));
 
     //输入门
     //i(t)=sigma(Wi*input+bi)
     //C~(t)=tanh(Wc*input+bc)
     MatMul(&(cell->input),&(cell->W_I),&(cell->it));
-    AddVector(&(cell->it),&(cell->U_I),&(cell->ft));
+    AddVector(&(cell->it),&(cell->U_I),&(cell->it));
     sigmoid(&(cell->it),&(cell->it));
 
     MatMul(&(cell->input),&(cell->W_C),&(cell->ct));
-    AddVector(&(cell->ct),&(cell->U_C),&(cell->ft));
+    AddVector(&(cell->ct),&(cell->U_C),&(cell->ct));
     tensortanh(&(cell->ct),&(cell->ct));
 
     //输出门
     //o(t)=sigma(Wo*input+bo)
     MatMul(&(cell->input),&(cell->W_O),&(cell->ot));
-    AddVector(&(cell->ot),&(cell->U_O),&(cell->ft));
+    AddVector(&(cell->ot),&(cell->U_O),&(cell->ot));
     sigmoid(&(cell->ot),&(cell->ot));
 
     //更新C(t)
@@ -134,7 +137,7 @@ void LSTM_call(LSTM_cell cell,float* input)
 
     //更新输出状态
     //L(t)=o(t)*tanh(C(t))
-    tensortanh(&(cell->ct),&(cell->L));
+    tensortanh(&(cell->C),&(cell->L));
     for(i=0;i<cell->units;i++) cell->L.data[i]=cell->ot.data[i]*cell->L.data[i];
 }
 
@@ -150,7 +153,7 @@ void LSTM_static(LSTM_cell* cell,int cells,tensor* input,tensor* output)
     if(input->max_dim==2)//只有一个batch的情况
     {
         int shape[3]={input->dims[0],input->dims[1],1};
-        Reshape(input,shape[3],3);
+        Reshape(input,shape,3);
     }
     assert(input->dims[0]==cell[0]->inputshape);
 
