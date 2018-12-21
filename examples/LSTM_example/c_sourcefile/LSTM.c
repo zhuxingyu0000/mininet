@@ -9,8 +9,6 @@ LSTM_cell LSTM_cell_create(int units,int inputshape)
     LSTM_cell cell=(LSTM_cell)malloc(sizeof(struct LSTM_cell_));
     cell->units=units;
     cell->inputshape=inputshape;
-    cell->last=cell;
-    cell->next=cell;
     
     cell->W_I.max_dim=2;
     cell->W_I.dims[1]=inputshape+units;
@@ -74,18 +72,6 @@ void LSTM_cell_initalize(LSTM_cell cell,LSTM_initalize_struct* s)
     cell->W_O.data=s->W_O;
 }
 
-void LSTM_multicellconnect(LSTM_cell* cell,int cells)
-{
-    int i;
-    for(i=1;i<cells-1;i++)
-    {
-        cell[i]->next=cell[i+1];
-        cell[i]->last=cell[i-1];
-    }
-    cell[0]->last=cell[0];
-    cell[cells-1]->next=cell[cells-1];
-}
-
 void LSTM_cell_destroy(LSTM_cell cell)
 {
     free(cell->C.data);
@@ -105,7 +91,7 @@ void LSTM_call(LSTM_cell cell,float* input,float forget_bias)
 
     //input=[x(t),L(t-1)]
     for(i=0;i<cell->inputshape;i++) cell->input.data[i]=input[i];
-    for(i=0;i<cell->units;i++) cell->input.data[i+cell->inputshape]=cell->last->L.data[i];
+    for(i=0;i<cell->units;i++) cell->input.data[i+cell->inputshape]=cell->L.data[i];
 
     //遗忘门
     //f(t)=sigma(Wf*input+bf)
@@ -155,6 +141,7 @@ void LSTM_static(LSTM_cell* cell,int cells,int forget_bias,tensor* input,tensor*
         int shape[3]={input->dims[0],input->dims[1],1};
         Reshape(input,shape,3);
     }
+    
     assert(input->dims[0]==cell[0]->inputshape);
 
     output->dims[0]=cell[0]->units;
@@ -173,9 +160,10 @@ void LSTM_static(LSTM_cell* cell,int cells,int forget_bias,tensor* input,tensor*
         for(j=0;j<time_steps;j++)
         {
             float* data=input->data+input->dims[0]*j+input->dims[0]*input->dims[1]*i;
-            for(k=0;k<cells;k++)
+            LSTM_call(cell[0],data,forget_bias);
+            for(k=1;k<cells;k++)
             {
-                LSTM_call(cell[k],data,forget_bias);
+                LSTM_call(cell[k],cell[k-1]->L.data,forget_bias);
             }
         }
         for(k=0;k<output->dims[0];k++)

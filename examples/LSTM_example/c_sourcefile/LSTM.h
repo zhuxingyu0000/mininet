@@ -9,10 +9,6 @@ typedef struct LSTM_cell_{
     int units;//LSTM输出序列长度
     int inputshape;//LSTM输入序列长度
 
-    //多层LSTM用，单层LSTM设为本身
-    struct LSTM_cell_* last;//前一LSTM单元
-    struct LSTM_cell_* next;//后一LSTM单元
-
     //LSTM内部权值,W表示乘积矩阵，U表示偏置矩阵
     tensor W_I;
     tensor U_I;
@@ -49,10 +45,7 @@ LSTM_cell LSTM_cell_create(int units,int inputshape);
 //初始化LSTM单元的权值
 void LSTM_cell_initalize(LSTM_cell cell,LSTM_initalize_struct* s);
 
-//合并多层LSTM单元
-void LSTM_multicellconnect(LSTM_cell* cell,int cells);
-
-//运行静态LSTM,cell是存放LSTM单元的数组，cells代表多层LSTM的层数,time_steps代表LSTM的输入序列个数
+//运行静态LSTM,cell是存放LSTM单元的数组，单层LSTM即为单元地址，cells代表多层LSTM的层数,单层LSTM设为1，time_steps代表LSTM的输入序列个数
 //多层LSTM需要先合并
 //LSTM input shape (batchs,time_steps,inputshape)
 //LSTM output shape (batchs,outputshape)

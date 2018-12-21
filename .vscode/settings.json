@@ -2,6 +2,10 @@
     "files.associations": {
         "net.h": "c",
         "w1_i.h": "c",
-        "w1_c.h": "c"
+        "w1_c.h": "c",
+        "tensor_interface.h": "c",
+        "lstm.h": "c",
+        "iostream": "c",
+        "ostream": "c"
     }
 }
